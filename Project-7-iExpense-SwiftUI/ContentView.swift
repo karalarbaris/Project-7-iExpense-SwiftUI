@@ -7,52 +7,75 @@
 
 import SwiftUI
 
-
-//Deleting items using onDelete()
+//Storing user settings with UserDefaults
 
 struct ContentView: View {
     
-    @State private var numbers = [Int]()
-    @State private var currentNumber = 1
+    @State private var tapCount = UserDefaults.standard.integer(forKey: "Tap")
     
     var body: some View {
         
-        NavigationView {
-            VStack {
-                List {
-                    ForEach(numbers, id: \.self) {
-                        Text("\($0)")
-                    }
-                    .onDelete(perform: removeRows)
-                    
-                    //Or
-                    //                .onDelete(perform: { indexSet in
-                    //                    numbers.remove(atOffsets: indexSet)
-                    //                })
-                }
-                
-                //That would also work, but here’s our first quirk: the onDelete() modifier only exists on ForEach, so if we want users to delete items from a list we must put the items inside a ForEach.
-                //            List(numbers, id: \.self) {
-                //               Text("\($0)")
-                //            }
-                
-                Button("Add number") {
-                    numbers.append(currentNumber)
-                    currentNumber += 1
-                }
-                
+        VStack {
+            Button("Tap count \(tapCount)") {
+                tapCount += 1
+                UserDefaults.standard.set(tapCount, forKey: "Tap")
             }
-            .navigationBarItems(leading: EditButton())
+            Text("\(tapCount)")
         }
         
         
+        
+        
     }
     
-    func removeRows(at offsets: IndexSet) {
-        numbers.remove(atOffsets: offsets)
-    }
     
 }
+
+////Deleting items using onDelete()
+//
+//struct ContentView: View {
+//
+//    @State private var numbers = [Int]()
+//    @State private var currentNumber = 1
+//
+//    var body: some View {
+//
+//        NavigationView {
+//            VStack {
+//                List {
+//                    ForEach(numbers, id: \.self) {
+//                        Text("\($0)")
+//                    }
+//                    .onDelete(perform: removeRows)
+//
+//                    //Or
+//                    //                .onDelete(perform: { indexSet in
+//                    //                    numbers.remove(atOffsets: indexSet)
+//                    //                })
+//                }
+//
+//                //That would also work, but here’s our first quirk: the onDelete() modifier only exists on ForEach, so if we want users to delete items from a list we must put the items inside a ForEach.
+//                //            List(numbers, id: \.self) {
+//                //               Text("\($0)")
+//                //            }
+//
+//                Button("Add number") {
+//                    numbers.append(currentNumber)
+//                    currentNumber += 1
+//                }
+//
+//            }
+//            .navigationBarItems(leading: EditButton())
+//        }
+//
+//
+//    }
+//
+//    func removeRows(at offsets: IndexSet) {
+//        numbers.remove(atOffsets: offsets)
+//    }
+//
+//}
 
 ////Showing and hiding views
 //
