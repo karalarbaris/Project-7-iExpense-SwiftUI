@@ -7,20 +7,46 @@
 
 import SwiftUI
 
-//Storing user settings with UserDefaults
+//Archiving Swift objects with Codable
+
+struct User: Codable {
+   var firstName: String
+   var lastName: String
+}
 
 struct ContentView: View {
-    
-    @State private var tapCount = UserDefaults.standard.integer(forKey: "Tap")
+        
+    @State private var user = User(firstName: "baris", lastName: "karalar")
     
     var body: some View {
         
         VStack {
-            Button("Tap count \(tapCount)") {
-                tapCount += 1
-                UserDefaults.standard.set(tapCount, forKey: "Tap")
+            TextField("asdfasd \(user.firstName)", text: $user.firstName)
+            TextField("Last name:", text: $user.lastName)
+
+            Button("Save user") {
+                
+                let encoder = JSONEncoder()
+                
+                if let data = try? encoder.encode(user) {
+                    UserDefaults.standard.set(data, forKey: "UserData")
+                }
+              
             }
-            Text("\(tapCount)")
+            
+            Button("Show user") {
+                if let userData = UserDefaults.standard.data(forKey: "UserData") {
+                    let decoder = JSONDecoder()
+                    
+                    if let user = try? decoder.decode(User.self, from: userData) {
+                        print(user.firstName)
+                        print(user.lastName)
+                    }
+                }
+                
+                
+              
+            }
         }
         
         
@@ -30,6 +56,30 @@ struct ContentView: View {
     
     
 }
+
+////Storing user settings with UserDefaults
+//
+//struct ContentView: View {
+//
+//    @State private var tapCount = UserDefaults.standard.integer(forKey: "Tap")
+//
+//    var body: some View {
+//
+//        VStack {
+//            Button("Tap count \(tapCount)") {
+//                tapCount += 1
+//                UserDefaults.standard.set(tapCount, forKey: "Tap")
+//            }
+//            Text("\(tapCount)")
+//        }
+//
+//
+//
+//
+//    }
+//
+//
+//}
 
 ////Deleting items using onDelete()
 //
