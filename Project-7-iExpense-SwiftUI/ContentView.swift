@@ -7,37 +7,86 @@
 
 import SwiftUI
 
-struct SecondView: View {
-    
-    var name: String
-    @Environment(\.presentationMode) var presentatiionMode
-    
-    var body: some View {
-        Text("Second view \(name)")
 
-        Button("Dismiss") {
-            self.presentatiionMode.wrappedValue.dismiss()
-        }
-    }
-}
+//Deleting items using onDelete()
 
 struct ContentView: View {
     
-    @State private var showingSheet = false
+    @State private var numbers = [Int]()
+    @State private var currentNumber = 1
     
     var body: some View {
         
-        Button("Show sheet") {
-            showingSheet.toggle()
+        NavigationView {
+            VStack {
+                List {
+                    ForEach(numbers, id: \.self) {
+                        Text("\($0)")
+                    }
+                    .onDelete(perform: removeRows)
+                    
+                    //Or
+                    //                .onDelete(perform: { indexSet in
+                    //                    numbers.remove(atOffsets: indexSet)
+                    //                })
+                }
+                
+                //That would also work, but here’s our first quirk: the onDelete() modifier only exists on ForEach, so if we want users to delete items from a list we must put the items inside a ForEach.
+                //            List(numbers, id: \.self) {
+                //               Text("\($0)")
+                //            }
+                
+                Button("Add number") {
+                    numbers.append(currentNumber)
+                    currentNumber += 1
+                }
+                
+            }
+            .navigationBarItems(leading: EditButton())
         }
-        .sheet(isPresented: $showingSheet, content: {
-            SecondView(name: "Barisss")
-        })
         
-
-    
+        
     }
+    
+    func removeRows(at offsets: IndexSet) {
+        numbers.remove(atOffsets: offsets)
+    }
+    
 }
+
+////Showing and hiding views
+//
+//struct SecondView: View {
+//
+//    var name: String
+//    @Environment(\.presentationMode) var presentatiionMode
+//
+//    var body: some View {
+//        Text("Second view \(name)")
+//
+//        Button("Dismiss") {
+//            self.presentatiionMode.wrappedValue.dismiss()
+//        }
+//    }
+//}
+//
+//struct ContentView: View {
+//
+//    @State private var showingSheet = false
+//
+//    var body: some View {
+//
+//        Button("Show sheet") {
+//            showingSheet.toggle()
+//        }
+//        .sheet(isPresented: $showingSheet, content: {
+//            SecondView(name: "Barisss")
+//        })
+//
+//
+//
+//    }
+//}
 
 ////Sharing SwiftUI state with @ObservedObject
 //
