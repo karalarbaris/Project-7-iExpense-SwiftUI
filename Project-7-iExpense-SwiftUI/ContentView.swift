@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-//Archiving Swift objects with Codable
+//Building a list we can delete from
 
 struct ExpenseItem {
     let name: String
