@@ -7,55 +7,99 @@
 
 import SwiftUI
 
+
 //Archiving Swift objects with Codable
 
-struct User: Codable {
-   var firstName: String
-   var lastName: String
+struct ExpenseItem {
+    let name: String
+    let type: String
+    let amount: Int
+}
+
+class Expenses: ObservableObject {
+    @Published var items = [ExpenseItem]()
 }
 
 struct ContentView: View {
         
-    @State private var user = User(firstName: "baris", lastName: "karalar")
+    @ObservedObject var expenses = Expenses()
     
     var body: some View {
         
-        VStack {
-            TextField("asdfasd \(user.firstName)", text: $user.firstName)
-            TextField("Last name:", text: $user.lastName)
-
-            Button("Save user") {
-                
-                let encoder = JSONEncoder()
-                
-                if let data = try? encoder.encode(user) {
-                    UserDefaults.standard.set(data, forKey: "UserData")
+        NavigationView {
+            List {
+                ForEach(expenses.items, id: \.name) { item in
+                    Text(item.name)
                 }
-              
+                .onDelete(perform: removeItems)
             }
-            
-            Button("Show user") {
-                if let userData = UserDefaults.standard.data(forKey: "UserData") {
-                    let decoder = JSONDecoder()
-                    
-                    if let user = try? decoder.decode(User.self, from: userData) {
-                        print(user.firstName)
-                        print(user.lastName)
-                    }
-                }
-                
-                
-              
-            }
+            .navigationBarTitle("iExpense")
+            .navigationBarItems(trailing: Button(action: {
+                let expense = ExpenseItem(name: "Milk", type: "Personal", amount: 3)
+                expenses.items.append(expense)
+            }, label: {
+                Image(systemName: "plus")
+            }))
         }
         
-        
-        
-        
+    }
+    
+    func removeItems(at offsets: IndexSet) {
+        expenses.items.remove(atOffsets: offsets)
     }
     
     
 }
+
+////Archiving Swift objects with Codable
+//
+//struct User: Codable {
+//   var firstName: String
+//   var lastName: String
+//}
+//
+//struct ContentView: View {
+//
+//    @State private var user = User(firstName: "baris", lastName: "karalar")
+//
+//    var body: some View {
+//
+//        VStack {
+//            TextField("asdfasd \(user.firstName)", text: $user.firstName)
+//            TextField("Last name:", text: $user.lastName)
+//
+//            Button("Save user") {
+//
+//                let encoder = JSONEncoder()
+//
+//                if let data = try? encoder.encode(user) {
+//                    UserDefaults.standard.set(data, forKey: "UserData")
+//                }
+//
+//            }
+//
+//            Button("Show user") {
+//                if let userData = UserDefaults.standard.data(forKey: "UserData") {
+//                    let decoder = JSONDecoder()
+//
+//                    if let user = try? decoder.decode(User.self, from: userData) {
+//                        print(user.firstName)
+//                        print(user.lastName)
+//                    }
+//                }
+//
+//
+//
+//            }
+//        }
+//
+//
+//
+//
+//    }
+//
+//
+//}
 
 ////Storing user settings with UserDefaults
 //
