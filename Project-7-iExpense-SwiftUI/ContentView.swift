@@ -9,8 +9,10 @@ import SwiftUI
 
 
 //Building a list we can delete from
+//Working with Identifiable items in SwiftUI
 
-struct ExpenseItem {
+struct ExpenseItem: Identifiable {
+    let id = UUID()
     let name: String
     let type: String
     let amount: Int
@@ -28,7 +30,7 @@ struct ContentView: View {
         
         NavigationView {
             List {
-                ForEach(expenses.items, id: \.name) { item in
+                ForEach(expenses.items) { item in
                     Text(item.name)
                 }
                 .onDelete(perform: removeItems)
@@ -38,9 +40,11 @@ struct ContentView: View {
                 let expense = ExpenseItem(name: "Milk", type: "Personal", amount: 3)
                 expenses.items.append(expense)
             }, label: {
+                
                 Image(systemName: "plus")
             }))
         }
+        .padding()
         
     }
     
