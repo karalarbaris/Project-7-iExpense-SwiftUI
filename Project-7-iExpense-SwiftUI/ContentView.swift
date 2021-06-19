@@ -10,8 +10,9 @@ import SwiftUI
 
 //Building a list we can delete from
 //Working with Identifiable items in SwiftUI
+//Making changes permanent with UserDefaults
 
-struct ExpenseItem: Identifiable {
+struct ExpenseItem: Identifiable, Codable {
     let id = UUID()
     let name: String
     let type: String    
@@ -19,7 +20,25 @@ struct ExpenseItem: Identifiable {
 }
 
 class Expenses: ObservableObject {
-    @Published var items = [ExpenseItem]()
+    @Published var items = [ExpenseItem]() {
+        didSet {
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(items) {
+                UserDefaults.standard.set(encoded, forKey: "Items")
+            }
+        }
+    }
+    
+    init() {
+        if let itemsReceived = UserDefaults.standard.data(forKey: "Items") {
+            let decoder = JSONDecoder()
+            if let decoded = try? decoder.decode([ExpenseItem].self, from: itemsReceived) {
+                items = decoded
+                return
+            }
+        }
+        items = []
+    }
 }
 
 struct ContentView: View {

@@ -35,6 +35,13 @@ struct AddView: View {
                     .keyboardType(.numberPad)
             }
             .navigationBarTitle("Add new expense")
+            .navigationBarItems(trailing: Button("Save", action: {
+                if let amount = Int(amount) {
+                    let item = ExpenseItem(name: name, type: type, amount: Int(amount))
+                    expenses.items.append(item)
+                }
+               
+            }))
         }
         
         
