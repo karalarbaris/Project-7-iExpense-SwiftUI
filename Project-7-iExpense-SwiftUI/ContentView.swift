@@ -14,7 +14,7 @@ import SwiftUI
 struct ExpenseItem: Identifiable {
     let id = UUID()
     let name: String
-    let type: String
+    let type: String    
     let amount: Int
 }
 
@@ -25,6 +25,8 @@ class Expenses: ObservableObject {
 struct ContentView: View {
         
     @ObservedObject var expenses = Expenses()
+    @State private var showingAddExpense = false
+    
     
     var body: some View {
         
@@ -37,14 +39,18 @@ struct ContentView: View {
             }
             .navigationBarTitle("iExpense")
             .navigationBarItems(trailing: Button(action: {
-                let expense = ExpenseItem(name: "Milk", type: "Personal", amount: 3)
-                expenses.items.append(expense)
+//                let expense = ExpenseItem(name: "Milk", type: "Personal", amount: 3)
+//                expenses.items.append(expense)
+                showingAddExpense = true
             }, label: {
                 
                 Image(systemName: "plus")
             }))
+            .sheet(isPresented: $showingAddExpense, content: {
+                AddView(expenses: expenses)
+            })
         }
-        .padding()
+        
         
     }
     
