@@ -21,6 +21,8 @@ struct AddView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var showingAlert = false
+    
     var body: some View {
         
         NavigationView {
@@ -34,17 +36,22 @@ struct AddView: View {
                 }
                 
                 TextField("Amount", text: $amount)
-                    .keyboardType(.numberPad)
+//                    .keyboardType(.numberPad)
             }
             .navigationBarTitle("Add new expense")
             .navigationBarItems(trailing: Button("Save", action: {
                 if let amount = Int(amount) {
                     let item = ExpenseItem(name: name, type: type, amount: Int(amount))
                     expenses.items.append(item)
+                    presentationMode.wrappedValue.dismiss()
+                } else {
+                    showingAlert = true
                 }
-                presentationMode.wrappedValue.dismiss()
                
             }))
+            .alert(isPresented: $showingAlert, content: {
+                Alert(title: Text("Not a number"), message: Text("Please enter a number"), dismissButton: .default(Text("Okay")))
+            })
         }
         
         
