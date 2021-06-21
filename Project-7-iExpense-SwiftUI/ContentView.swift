@@ -68,7 +68,7 @@ struct ContentView: View {
                 .onDelete(perform: removeItems)
             }
             .navigationBarTitle("iExpense")
-            .navigationBarItems(trailing: Button(action: {
+            .navigationBarItems(leading: EditButton() ,trailing: Button(action: {
 //                let expense = ExpenseItem(name: "Milk", type: "Personal", amount: 3)
 //                expenses.items.append(expense)
                 showingAddExpense = true
