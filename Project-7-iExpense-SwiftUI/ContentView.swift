@@ -61,7 +61,17 @@ struct ContentView: View {
                             Text(item.type)
                         }
                         Spacer()
-                        Text("$\(item.amount)")
+                        if item.amount < 10 {
+                            Text("$\(item.amount)")
+                                .background(Color.green)
+                        } else if item.amount < 100 {
+                            Text("$\(item.amount)")
+                                .background(Color.gray)
+                        } else {
+                            Text("$\(item.amount)")
+                                .background(Color.red)
+                        }
+                        
                     }
                     
                 }
